@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Edu - Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-body">
+
+    <div class="login-container">
+        <h2>Stock Edu</h2>
+        <p>Login to Continue Learning</p>
+
+        <form action="basics.html" onsubmit="return validateForm()">
+
+            <input type="text" 
+                   placeholder="Username" 
+                   required 
+                   minlength="4" 
+                   maxlength="15">
+
+            <input type="email" 
+                   placeholder="Email" 
+                   required>
+
+            <input type="password" 
+                   id="password"
+                   placeholder="Password" 
+                   required 
+                   minlength="6">
+
+            <input type="password" 
+                   id="confirmPassword"
+                   placeholder="Confirm Password" 
+                   required>
+
+            <div class="checkbox">
+                <input type="checkbox" onclick="togglePassword()"> Show Password
+            </div>
+
+            <button type="submit">Login</button>
+
+        </form>
+    </div>
+
+<script>
+function togglePassword() {
+    let pass = document.getElementById("password");
+    let confirmPass = document.getElementById("confirmPassword");
+
+    if (pass.type === "password") {
+        pass.type = "text";
+        confirmPass.type = "text";
+    } else {
+        pass.type = "password";
+        confirmPass.type = "password";
+    }
+}
+
+function validateForm() {
+    let pass = document.getElementById("password").value;
+    let confirmPass = document.getElementById("confirmPassword").value;
+
+    if (pass !== confirmPass) {
+        alert("Passwords do not match!");
+        return false;
+    }
+    return true;
+}
+</script>
+
+</body>
+</html>

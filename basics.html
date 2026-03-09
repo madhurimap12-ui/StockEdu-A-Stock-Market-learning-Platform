@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stock Edu – Basics</title>
+  <style>
+    /* ── Root Variables ── */
+    :root {
+      --navy:   #1a1040;
+      --purple: #2d1b69;
+      --accent: #00c9a7;
+      --gold:   #f5c518;
+      --light:  #f0eeff;
+      --white:  #ffffff;
+      --text:   #333;
+      --card-bg:#fff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: var(--light);
+      color: var(--text);
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--navy);
+      color: var(--white);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    header h1 { font-size: 1.5rem; letter-spacing: 1px; }
+
+    /* ── Navbar ── */
+    nav {
+      background: #f5f5f5;
+      border-bottom: 1px solid #ddd;
+      padding: 10px 32px;
+      display: flex;
+      gap: 20px;
+    }
+    nav a {
+      text-decoration: none;
+      color: #0000cc;
+      font-size: 0.95rem;
+    }
+    nav a:hover { text-decoration: underline; }
+    nav a.active { color: var(--navy); font-weight: bold; text-decoration: underline; }
+
+    /* ── Hero Banner ── */
+    .hero {
+      background: var(--purple);
+      color: var(--white);
+      padding: 50px 32px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "📈";
+      font-size: 120px;
+      position: absolute;
+      right: 5%;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.08;
+    }
+    .hero h2 { font-size: 2.2rem; margin-bottom: 12px; }
+    .hero p  { font-size: 1.1rem; opacity: 0.85; max-width: 560px; margin: 0 auto; }
+
+    /* ── Progress Bar ── */
+    .progress-wrap {
+      background: var(--navy);
+      padding: 14px 32px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--white);
+      font-size: 0.85rem;
+    }
+    .bar-track {
+      flex: 1;
+      height: 8px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      border-radius: 99px;
+      transition: width 0.6s ease;
+    }
+    #prog-label { min-width: 80px; text-align: right; }
+
+    /* ── Main Layout ── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+
+    /* ── Section heading ── */
+    .section-title {
+      font-size: 1.05rem;
+      color: var(--purple);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(to right, var(--purple), transparent);
+    }
+
+    /* ── Cards ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 22px;
+      margin-bottom: 48px;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 28px 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border-top: 4px solid var(--purple);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: default;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.13);
+    }
+    .card .icon { font-size: 2rem; margin-bottom: 12px; }
+    .card h3 { font-size: 1.1rem; color: var(--navy); margin-bottom: 8px; }
+    .card p  { font-size: 0.93rem; line-height: 1.65; color: #555; }
+
+    /* ── Highlight Box ── */
+    .highlight {
+      background: #fff8e1;
+      border-left: 5px solid var(--gold);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin-bottom: 40px;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: #5a4a00;
+    }
+    .highlight strong { color: #7a6000; }
+
+    /* ── Accordion ── */
+    .accordion { margin-bottom: 48px; }
+    .acc-item {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .acc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 22px;
+      cursor: pointer;
+      font-weight: bold;
+      color: var(--navy);
+      font-size: 0.97rem;
+      user-select: none;
+    }
+    .acc-header:hover { background: #f0eeff; }
+    .acc-arrow {
+      transition: transform 0.3s;
+      font-style: normal;
+    }
+    .acc-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s;
+      padding: 0 22px;
+      font-size: 0.92rem;
+      line-height: 1.75;
+      color: #555;
+    }
+    .acc-body.open {
+      max-height: 400px;
+      padding: 4px 22px 18px;
+    }
+    .acc-arrow.open { transform: rotate(180deg); }
+
+    /* ── Quiz ── */
+    .quiz-box {
+      background: var(--navy);
+      color: var(--white);
+      border-radius: 14px;
+      padding: 32px 28px;
+      margin-bottom: 48px;
+    }
+    .quiz-box h3 { font-size: 1.15rem; margin-bottom: 6px; }
+    .quiz-box .q-sub { font-size: 0.85rem; opacity: 0.7; margin-bottom: 22px; }
+    .quiz-question { font-size: 1rem; margin-bottom: 16px; line-height: 1.5; }
+    .quiz-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .quiz-options label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.08);
+      padding: 11px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.93rem;
+      transition: background 0.2s;
+    }
+    .quiz-options label:hover { background: rgba(255,255,255,0.16); }
+    .quiz-options input { accent-color: var(--accent); }
+    #quiz-btn {
+      background: var(--accent);
+      color: var(--navy);
+      border: none;
+      padding: 11px 28px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: opacity 0.2s;
+    }
+    #quiz-btn:hover { opacity: 0.85; }
+    #quiz-result {
+      margin-top: 16px;
+      font-size: 0.97rem;
+      min-height: 24px;
+      font-weight: bold;
+    }
+
+    /* ── Next Steps ── */
+    .next-steps {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .next-btn {
+      display: inline-block;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .next-btn:hover { opacity: 0.85; transform: translateY(-2px); }
+    .btn-primary { background: var(--purple); color: #fff; }
+    .btn-outline  { border: 2px solid var(--purple); color: var(--purple); background: transparent; }
+
+    /* ── Footer ── */
+    footer {
+      background: #eee;
+      text-align: center;
+      padding: 18px;
+      font-size: 0.85rem;
+      color: #666;
+      border-top: 1px solid #ddd;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .card, .acc-item, .quiz-box, .highlight {
+      animation: fadeUp 0.5s ease both;
+    }
+    .card:nth-child(1) { animation-delay: 0.05s; }
+    .card:nth-child(2) { animation-delay: 0.15s; }
+    .card:nth-child(3) { animation-delay: 0.25s; }
+    .card:nth-child(4) { animation-delay: 0.35s; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <h1>Stock Edu</h1>
+  </header>
+
+  <!-- Navbar -->
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="basics.html" class="active">Basics</a>
+    <a href="types.html">Types</a>
+    <a href="risk.html">Risk</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <h2>📚 Stock Market Basics</h2>
+    <p>Learn the fundamental building blocks before diving into the market. No jargon, no fluff — just clear concepts.</p>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <span>Your Progress:</span>
+    <div class="bar-track"><div class="bar-fill" id="bar"></div></div>
+    <span id="prog-label">0 / 4 topics</span>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+
+    <!-- Key Concepts Cards -->
+    <div class="section-title">Key Concepts</div>
+    <div class="cards">
+      <div class="card" onclick="markRead(this, 0)">
+        <div class="icon">🏢</div>
+        <h3>What is a Stock?</h3>
+        <p>A stock represents a small ownership piece of a company. When you buy a stock, you become a <strong>shareholder</strong> — meaning you own a tiny part of that business.</p>
+      </div>
+      <div class="card" onclick="markRead(this, 1)">
+        <div class="icon">📊</div>
+        <h3>What is a Stock Market?</h3>
+        <p>A stock market is a place (physical or digital) where buyers and sellers trade stocks. Famous examples include <strong>BSE, NSE</strong> in India and <strong>NYSE, NASDAQ</strong> in the USA.</p>
+      </div>
+      <div class="card" onclick="markRead(this, 2)">
+        <div class="icon">💰</div>
+        <h3>How Do You Make Money?</h3>
+        <p>You earn money in two ways: <strong>Capital Gains</strong> (selling a stock at a higher price than you bought it) and <strong>Dividends</strong> (a share of company profits paid to you).</p>
+      </div>
+      <div class="card" onclick="markRead(this, 3)">
+        <div class="icon">🔄</div>
+        <h3>What is Trading vs Investing?</h3>
+        <p><strong>Trading</strong> = buying and selling frequently for short-term profit. <strong>Investing</strong> = holding stocks for years to grow wealth slowly and steadily.</p>
+      </div>
+    </div>
+
+    <!-- Tip Box -->
+    <div class="highlight">
+      <strong>💡 Beginner Tip:</strong> Never invest money you can't afford to lose. Start by learning — you're already doing that right now! Most successful investors spend months studying before putting in a single rupee.
+    </div>
+
+    <!-- Accordion – Deep Dives -->
+    <div class="section-title">Deep Dives</div>
+    <div class="accordion" id="accordion">
+
+      <div class="acc-item">
+        <div class="acc-header" onclick="toggleAcc(0)">
+          What is a Share and a Shareholder? <span class="acc-arrow" id="arrow-0">▼</span>
+        </div>
+        <div class="acc-body" id="body-0">
+          A company divides its ownership into millions of tiny equal pieces called <strong>shares</strong>. If a company has 1,000,000 shares and you buy 100, you own 0.01% of that company. That makes you a <strong>shareholder</strong>. Shareholders sometimes get voting rights on big company decisions.
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-header" onclick="toggleAcc(1)">
+          What is an IPO (Initial Public Offering)? <span class="acc-arrow" id="arrow-1">▼</span>
+        </div>
+        <div class="acc-body" id="body-1">
+          When a private company wants to raise money from the public, it "goes public" through an <strong>IPO</strong>. This is when the company first sells its shares on the stock market. Think of it as the company's debut on the stock exchange. After the IPO, anyone can buy or sell those shares.
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-header" onclick="toggleAcc(2)">
+          What is a Bull Market vs a Bear Market? <span class="acc-arrow" id="arrow-2">▼</span>
+        </div>
+        <div class="acc-body" id="body-2">
+          A <strong>Bull Market</strong> 🐂 is when stock prices are rising — investors are confident and optimistic. A <strong>Bear Market</strong> 🐻 is when prices are falling — usually by 20% or more — and investors are fearful. Both are normal parts of the market cycle. Long-term investors don't panic during bear markets.
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-header" onclick="toggleAcc(3)">
+          What is Market Capitalisation (Market Cap)? <span class="acc-arrow" id="arrow-3">▼</span>
+        </div>
+        <div class="acc-body" id="body-3">
+          Market Cap = Share Price × Total Number of Shares. It tells you the total value of a company in the market. Companies are grouped as <strong>Large Cap</strong> (very stable, e.g. Reliance, TCS), <strong>Mid Cap</strong> (moderate growth), and <strong>Small Cap</strong> (high risk, high reward).
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Quick Quiz -->
+    <div class="quiz-box">
+      <h3>🧠 Quick Quiz</h3>
+      <p class="q-sub">Test what you just learned!</p>
+      <div id="quiz-area">
+        <div class="quiz-question" id="q-text">Loading question...</div>
+        <div class="quiz-options" id="q-options"></div>
+        <button id="quiz-btn" onclick="checkAnswer()">Submit Answer</button>
+        <div id="quiz-result"></div>
+      </div>
+    </div>
+
+    <!-- Next Steps -->
+    <div class="section-title">What's Next?</div>
+    <div class="next-steps">
+      <a href="types.html" class="next-btn btn-primary">Next: Types of Stocks →</a>
+      <a href="risk.html"  class="next-btn btn-outline">Learn About Risk</a>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>© 2026 Stock Edu | For Educational Purposes Only</footer>
+
+  <script>
+    // ── Progress Tracker ──
+    const read = [false, false, false, false];
+    function markRead(card, i) {
+      if (read[i]) return;
+      read[i] = true;
+      card.style.borderTopColor = '#00c9a7';
+      card.style.background = '#f0fff8';
+      updateProgress();
+    }
+    function updateProgress() {
+      const done = read.filter(Boolean).length;
+      document.getElementById('bar').style.width = (done / 4 * 100) + '%';
+      document.getElementById('prog-label').textContent = done + ' / 4 topics';
+    }
+
+    // ── Accordion ──
+    function toggleAcc(i) {
+      const body  = document.getElementById('body-' + i);
+      const arrow = document.getElementById('arrow-' + i);
+      body.classList.toggle('open');
+      arrow.classList.toggle('open');
+    }
+
+    // ── Quiz ──
+    const questions = [
+      {
+        q: "What does owning a stock mean?",
+        options: ["You lend money to a company", "You own a small piece of a company", "You work for a company", "You control all decisions"],
+        answer: 1
+      },
+      {
+        q: "What is a 'Bull Market'?",
+        options: ["Prices are falling rapidly", "Prices are rising and investors are optimistic", "A market for selling cattle", "A market crash"],
+        answer: 1
+      },
+      {
+        q: "What does IPO stand for?",
+        options: ["International Purchase Order", "Initial Public Offering", "Investor Profit Option", "Internal Price Optimization"],
+        answer: 1
+      }
+    ];
+
+    let currentQ = Math.floor(Math.random() * questions.length);
+    let answered = false;
+
+    function loadQuestion() {
+      const q = questions[currentQ];
+      document.getElementById('q-text').textContent = q.q;
+      const container = document.getElementById('q-options');
+      container.innerHTML = '';
+      q.options.forEach((opt, i) => {
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="radio" name="quiz" value="${i}"> ${opt}`;
+        container.appendChild(label);
+      });
+      answered = false;
+      document.getElementById('quiz-result').textContent = '';
+      document.getElementById('quiz-btn').textContent = 'Submit Answer';
+    }
+
+    function checkAnswer() {
+      if (answered) {
+        currentQ = (currentQ + 1) % questions.length;
+        loadQuestion();
+        return;
+      }
+      const sel = document.querySelector('input[name="quiz"]:checked');
+      if (!sel) { document.getElementById('quiz-result').textContent = '⚠️ Please select an option first!'; return; }
+      const chosen = parseInt(sel.value);
+      const correct = questions[currentQ].answer;
+      const resultEl = document.getElementById('quiz-result');
+      if (chosen === correct) {
+        resultEl.textContent = '✅ Correct! Well done!';
+        resultEl.style.color = '#00c9a7';
+      } else {
+        resultEl.textContent = '❌ Not quite. The answer was: "' + questions[currentQ].options[correct] + '"';
+        resultEl.style.color = '#ff6b6b';
+      }
+      answered = true;
+      document.getElementById('quiz-btn').textContent = 'Next Question →';
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>

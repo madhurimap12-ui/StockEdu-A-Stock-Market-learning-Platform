@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stock Edu – Risk</title>
+  <style>
+    :root {
+      --navy:   #1a1040;
+      --purple: #2d1b69;
+      --accent: #00c9a7;
+      --gold:   #f5c518;
+      --light:  #f0eeff;
+      --white:  #ffffff;
+      --text:   #333;
+      --danger: #e74c3c;
+      --warning:#f39c12;
+      --safe:   #27ae60;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: var(--light);
+      color: var(--text);
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--navy);
+      color: var(--white);
+      padding: 16px 32px;
+    }
+    header h1 { font-size: 1.5rem; letter-spacing: 1px; }
+
+    /* ── Navbar ── */
+    nav {
+      background: #f5f5f5;
+      border-bottom: 1px solid #ddd;
+      padding: 10px 32px;
+      display: flex;
+      gap: 20px;
+    }
+    nav a {
+      text-decoration: none;
+      color: #0000cc;
+      font-size: 0.95rem;
+    }
+    nav a:hover { text-decoration: underline; }
+    nav a.active { color: var(--navy); font-weight: bold; text-decoration: underline; }
+
+    /* ── Hero ── */
+    .hero {
+      background: var(--purple);
+      color: var(--white);
+      padding: 50px 32px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "⚠️";
+      font-size: 120px;
+      position: absolute;
+      right: 5%;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.08;
+    }
+    .hero h2 { font-size: 2.2rem; margin-bottom: 12px; }
+    .hero p  { font-size: 1.1rem; opacity: 0.85; max-width: 560px; margin: 0 auto; }
+
+    /* ── Container ── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+
+    /* ── Section Title ── */
+    .section-title {
+      font-size: 1.05rem;
+      color: var(--purple);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(to right, var(--purple), transparent);
+    }
+
+    /* ── Risk Cards ── */
+    .risk-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 22px;
+      margin-bottom: 48px;
+    }
+    .risk-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border-top: 4px solid var(--danger);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .risk-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.13);
+    }
+    .risk-card .icon { font-size: 2rem; margin-bottom: 12px; }
+    .risk-card h3 { font-size: 1.1rem; color: var(--navy); margin-bottom: 8px; }
+    .risk-card p  { font-size: 0.93rem; line-height: 1.65; color: #555; }
+
+    /* ── Risk Meter ── */
+    .risk-meter-section {
+      background: #fff;
+      border-radius: 14px;
+      padding: 32px 28px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      margin-bottom: 48px;
+    }
+    .risk-meter-section h3 {
+      color: var(--navy);
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+    .meter-item {
+      margin-bottom: 18px;
+    }
+    .meter-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+      color: #444;
+    }
+    .meter-label span:last-child { font-weight: bold; }
+    .meter-bar {
+      height: 10px;
+      background: #eee;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .meter-fill {
+      height: 100%;
+      border-radius: 99px;
+      width: 0%;
+      transition: width 1.2s ease;
+    }
+    .fill-low    { background: var(--safe); }
+    .fill-medium { background: var(--warning); }
+    .fill-high   { background: var(--danger); }
+
+    /* ── Tips Grid ── */
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 22px;
+      margin-bottom: 48px;
+    }
+    .tip-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border-left: 4px solid var(--accent);
+    }
+    .tip-card .icon { font-size: 1.8rem; margin-bottom: 10px; }
+    .tip-card h3 { font-size: 1rem; color: var(--navy); margin-bottom: 8px; }
+    .tip-card p  { font-size: 0.9rem; line-height: 1.65; color: #555; }
+
+    /* ── Highlight ── */
+    .highlight {
+      background: #fff8e1;
+      border-left: 5px solid var(--gold);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin-bottom: 40px;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: #5a4a00;
+    }
+    .highlight strong { color: #7a6000; }
+
+    /* ── Risk Quiz ── */
+    .quiz-box {
+      background: var(--navy);
+      color: var(--white);
+      border-radius: 14px;
+      padding: 32px 28px;
+      margin-bottom: 48px;
+    }
+    .quiz-box h3 { font-size: 1.15rem; margin-bottom: 6px; }
+    .quiz-box .q-sub { font-size: 0.85rem; opacity: 0.7; margin-bottom: 22px; }
+    .quiz-question { font-size: 1rem; margin-bottom: 16px; line-height: 1.5; }
+    .quiz-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .quiz-options label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.08);
+      padding: 11px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.93rem;
+      transition: background 0.2s;
+    }
+    .quiz-options label:hover { background: rgba(255,255,255,0.16); }
+    .quiz-options input { accent-color: var(--accent); }
+    #quiz-btn {
+      background: var(--accent);
+      color: var(--navy);
+      border: none;
+      padding: 11px 28px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: opacity 0.2s;
+    }
+    #quiz-btn:hover { opacity: 0.85; }
+    #quiz-result {
+      margin-top: 16px;
+      font-size: 0.97rem;
+      min-height: 24px;
+      font-weight: bold;
+    }
+
+    /* ── Next Steps ── */
+    .next-steps {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .next-btn {
+      display: inline-block;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .next-btn:hover { opacity: 0.85; transform: translateY(-2px); }
+    .btn-primary { background: var(--purple); color: #fff; }
+    .btn-outline  { border: 2px solid var(--purple); color: var(--purple); background: transparent; }
+
+    /* ── Footer ── */
+    footer {
+      background: #eee;
+      text-align: center;
+      padding: 18px;
+      font-size: 0.85rem;
+      color: #666;
+      border-top: 1px solid #ddd;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .risk-card { animation: fadeUp 0.5s ease both; }
+    .risk-card:nth-child(1) { animation-delay: 0.05s; }
+    .risk-card:nth-child(2) { animation-delay: 0.15s; }
+    .risk-card:nth-child(3) { animation-delay: 0.25s; }
+    .risk-card:nth-child(4) { animation-delay: 0.35s; }
+    .risk-card:nth-child(5) { animation-delay: 0.45s; }
+    .risk-card:nth-child(6) { animation-delay: 0.55s; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <h1>Stock Edu</h1>
+  </header>
+
+  <!-- Navbar -->
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="basics.html">Basics</a>
+    <a href="types.html">Types</a>
+    <a href="risk.html" class="active">Risk</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <h2>⚠️ Understanding Risk</h2>
+    <p>Every investment carries risk. Learn what they are and how to manage them like a smart investor.</p>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+
+    <!-- Risk Types -->
+    <div class="section-title">Types of Risk</div>
+    <div class="risk-cards">
+
+      <div class="risk-card">
+        <div class="icon">📉</div>
+        <h3>Market Risk</h3>
+        <p>The entire market can fall due to economic events, wars, or pandemics. Even good companies lose value when the whole market crashes. This affects everyone.</p>
+      </div>
+
+      <div class="risk-card">
+        <div class="icon">🏢</div>
+        <h3>Company Risk</h3>
+        <p>A specific company can perform badly due to poor management, scandals, or failed products — even when the rest of the market is doing well.</p>
+      </div>
+
+      <div class="risk-card">
+        <div class="icon">💧</div>
+        <h3>Liquidity Risk</h3>
+        <p>Sometimes you may not be able to sell your stock quickly at a fair price. This is common with small or obscure companies that have very few buyers.</p>
+      </div>
+
+      <div class="risk-card">
+        <div class="icon">💱</div>
+        <h3>Currency Risk</h3>
+        <p>If you invest in foreign stocks, changes in exchange rates can affect your returns — even if the stock price itself went up.</p>
+      </div>
+
+      <div class="risk-card">
+        <div class="icon">📰</div>
+        <h3>News & Sentiment Risk</h3>
+        <p>A single news headline can crash a stock overnight. Rumors, social media trends, and investor emotions can cause wild price swings with no logical reason.</p>
+      </div>
+
+      <div class="risk-card">
+        <div class="icon">🧠</div>
+        <h3>Emotional Risk</h3>
+        <p>The biggest risk is YOU. Panic selling during a crash, or greedily buying at peaks, are the most common reasons investors lose money.</p>
+      </div>
+
+    </div>
+
+    <!-- Risk Meter -->
+    <div class="section-title">Risk Level by Investment Type</div>
+    <div class="risk-meter-section">
+      <h3>How risky is each investment? (Hover to animate)</h3>
+
+      <div class="meter-item">
+        <div class="meter-label"><span>Fixed Deposits (FD)</span><span style="color:var(--safe)">Very Low</span></div>
+        <div class="meter-bar"><div class="meter-fill fill-low" data-width="15%"></div></div>
+      </div>
+      <div class="meter-item">
+        <div class="meter-label"><span>Blue Chip Stocks</span><span style="color:var(--safe)">Low</span></div>
+        <div class="meter-bar"><div class="meter-fill fill-low" data-width="30%"></div></div>
+      </div>
+      <div class="meter-item">
+        <div class="meter-label"><span>Mutual Funds</span><span style="color:var(--warning)">Medium</span></div>
+        <div class="meter-bar"><div class="meter-fill fill-medium" data-width="45%"></div></div>
+      </div>
+      <div class="meter-item">
+        <div class="meter-label"><span>Growth Stocks</span><span style="color:var(--warning)">Medium-High</span></div>
+        <div class="meter-bar"><div class="meter-fill fill-medium" data-width="65%"></div></div>
+      </div>
+      <div class="meter-item">
+        <div class="meter-label"><span>Penny Stocks</span><span style="color:var(--danger)">Very High</span></div>
+        <div class="meter-bar"><div class="meter-fill fill-high" data-width="85%"></div></div>
+      </div>
+      <div class="meter-item">
+        <div class="meter-label"><span>Crypto / Speculative</span><span style="color:var(--danger)">Extreme</span></div>
+        <div class="meter-bar"><div class="meter-fill fill-high" data-width="98%"></div></div>
+      </div>
+    </div>
+
+    <!-- Highlight -->
+    <div class="highlight">
+      <strong>💡 Golden Rule:</strong> Never invest money you cannot afford to lose. A good rule of thumb — keep at least 6 months of living expenses as savings before you start investing in stocks.
+    </div>
+
+    <!-- Risk Management Tips -->
+    <div class="section-title">How to Manage Risk</div>
+    <div class="tips-grid">
+
+      <div class="tip-card">
+        <div class="icon">🥗</div>
+        <h3>Diversify Your Portfolio</h3>
+        <p>Don't put all your money in one stock. Spread it across different companies and sectors so one bad stock doesn't ruin everything.</p>
+      </div>
+
+      <div class="tip-card">
+        <div class="icon">📅</div>
+        <h3>Invest for the Long Term</h3>
+        <p>Short-term markets are unpredictable. But historically, markets have always recovered and grown over 10+ year periods. Be patient.</p>
+      </div>
+
+      <div class="tip-card">
+        <div class="icon">🔍</div>
+        <h3>Do Your Research</h3>
+        <p>Before buying any stock, study the company. Look at its profits, debt, products, and competitors. Never buy based on tips alone.</p>
+      </div>
+
+      <div class="tip-card">
+        <div class="icon">🧘</div>
+        <h3>Control Your Emotions</h3>
+        <p>Don't panic sell when markets dip. Don't greedily buy at all-time highs. Stick to your strategy and ignore short-term noise.</p>
+      </div>
+
+      <div class="tip-card">
+        <div class="icon">💸</div>
+        <h3>Invest Regularly (SIP)</h3>
+        <p>Instead of investing all at once, invest a fixed amount every month (called SIP). This reduces the impact of market highs and lows.</p>
+      </div>
+
+      <div class="tip-card">
+        <div class="icon">🛑</div>
+        <h3>Set a Stop Loss</h3>
+        <p>Decide in advance how much loss you can tolerate. If a stock drops 15–20%, sell it and cut your losses. Don't hope it will "come back."</p>
+      </div>
+
+    </div>
+
+    <!-- Risk Quiz -->
+    <div class="quiz-box">
+      <h3>🧠 Risk Knowledge Quiz</h3>
+      <p class="q-sub">Test your understanding of investment risk!</p>
+      <div class="quiz-question" id="q-text">Loading...</div>
+      <div class="quiz-options" id="q-options"></div>
+      <button id="quiz-btn" onclick="checkAnswer()">Submit Answer</button>
+      <div id="quiz-result"></div>
+    </div>
+
+    <!-- Next Steps -->
+    <div class="section-title">What's Next?</div>
+    <div class="next-steps">
+      <a href="contact.html" class="next-btn btn-primary">Next: Contact Us →</a>
+      <a href="types.html"   class="next-btn btn-outline">← Back to Types</a>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>© 2026 Stock Edu | For Educational Purposes Only</footer>
+
+  <script>
+    // ── Animate Risk Meters on page load ──
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.querySelectorAll('.meter-fill').forEach(bar => {
+          bar.style.width = bar.getAttribute('data-width');
+        });
+      }, 300);
+    });
+
+    // ── Quiz ──
+    const questions = [
+      {
+        q: "What is 'Market Risk'?",
+        options: [
+          "Risk of a single company failing",
+          "Risk that the entire market falls due to economic events",
+          "Risk of not finding a buyer for your stock",
+          "Risk of currency fluctuations"
+        ],
+        answer: 1
+      },
+      {
+        q: "What is the BEST way to reduce risk in your portfolio?",
+        options: [
+          "Put all money in one strong stock",
+          "Buy only penny stocks",
+          "Diversify across different companies and sectors",
+          "Only invest in crypto"
+        ],
+        answer: 2
+      },
+      {
+        q: "What does SIP stand for?",
+        options: [
+          "Stock Investment Plan",
+          "Systematic Investment Plan",
+          "Safe Investment Protocol",
+          "Stock Index Purchase"
+        ],
+        answer: 1
+      },
+      {
+        q: "What is 'Emotional Risk' in investing?",
+        options: [
+          "Risk from company news",
+          "Risk of market crashes",
+          "Making poor decisions based on fear or greed",
+          "Risk from foreign currency changes"
+        ],
+        answer: 2
+      }
+    ];
+
+    let currentQ = 0;
+    let answered = false;
+
+    function loadQuestion() {
+      const q = questions[currentQ];
+      document.getElementById('q-text').textContent = q.q;
+      const container = document.getElementById('q-options');
+      container.innerHTML = '';
+      q.options.forEach((opt, i) => {
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="radio" name="quiz" value="${i}"> ${opt}`;
+        container.appendChild(label);
+      });
+      answered = false;
+      document.getElementById('quiz-result').textContent = '';
+      document.getElementById('quiz-btn').textContent = 'Submit Answer';
+    }
+
+    function checkAnswer() {
+      if (answered) {
+        currentQ = (currentQ + 1) % questions.length;
+        loadQuestion();
+        return;
+      }
+      const sel = document.querySelector('input[name="quiz"]:checked');
+      if (!sel) {
+        document.getElementById('quiz-result').textContent = '⚠️ Please select an option first!';
+        return;
+      }
+      const chosen = parseInt(sel.value);
+      const correct = questions[currentQ].answer;
+      const resultEl = document.getElementById('quiz-result');
+      if (chosen === correct) {
+        resultEl.textContent = '✅ Correct! Great job!';
+        resultEl.style.color = '#00c9a7';
+      } else {
+        resultEl.textContent = '❌ Not quite. Answer: "' + questions[currentQ].options[correct] + '"';
+        resultEl.style.color = '#ff6b6b';
+      }
+      answered = true;
+      document.getElementById('quiz-btn').textContent = 'Next Question →';
+    }
+
+    loadQuestion();
+  </script>
+
+</body>
+</html>
